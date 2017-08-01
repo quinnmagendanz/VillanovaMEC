@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.magendanz.villanovamec.MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/header_bar_height"
+        android:id="@+id/headerBar"
+        android:background="@color/novaDark"
+        android:orientation="horizontal"
+        android:layout_alignParentTop="true">
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tabbed_bar_height"
+        android:id="@+id/tabbedBar"
+        android:background="@color/novaDark"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true">
+
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/calendar_icon"
+            android:layout_margin="@dimen/tabbed_padding"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/news_icon"
+            android:layout_margin="@dimen/tabbed_padding"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/map_icon"
+            android:layout_margin="@dimen/tabbed_padding"/>
+
+    </LinearLayout>
+
+    <fragment
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/headerBar"
+        android:layout_above="@id/tabbedBar"
+        android:name="com.magendanz.villanovamec.mapFragment"
+        tools:layout="@layout/fragment_map" />
+
+</RelativeLayout>
