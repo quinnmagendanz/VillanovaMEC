@@ -8,17 +8,30 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/header_bar_height"
+        android:layout_height="@dimen/large_item_size"
         android:id="@+id/headerBar"
         android:background="@color/novaDark"
         android:orientation="horizontal"
         android:layout_alignParentTop="true">
 
+        <ImageView
+            android:layout_width="@dimen/medium_item_size"
+            android:layout_height="match_parent"
+            android:src="@drawable/villanova_mec_logo"
+            android:layout_margin="@dimen/small_padding"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/app_name"
+            android:gravity="center_vertical"
+            android:textSize="@dimen/large_text_size"/>
+
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/tabbed_bar_height"
+        android:layout_height="@dimen/medium_item_size"
         android:id="@+id/tabbedBar"
         android:background="@color/novaDark"
         android:orientation="horizontal"
@@ -28,32 +41,45 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:id="@+id/schedule_button"
             android:layout_weight="1"
             android:src="@drawable/calendar_icon"
-            android:layout_margin="@dimen/tabbed_padding"/>
+            android:padding="@dimen/medium_padding"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:onClick="switchToSchedule"/>
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:id="@+id/news_button"
             android:layout_weight="1"
             android:src="@drawable/news_icon"
-            android:layout_margin="@dimen/tabbed_padding"/>
+            android:padding="@dimen/medium_padding"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:onClick="switchToNews"/>
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:id="@+id/map_button"
             android:layout_weight="1"
             android:src="@drawable/map_icon"
-            android:layout_margin="@dimen/tabbed_padding"/>
+            android:padding="@dimen/medium_padding"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:onClick="switchToMap"/>
 
     </LinearLayout>
 
     <fragment
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:id="@+id/fragment_container"
         android:layout_below="@id/headerBar"
         android:layout_above="@id/tabbedBar"
-        android:name="com.magendanz.villanovamec.mapFragment"
+        android:name="com.magendanz.villanovamec.MapFragment"
         tools:layout="@layout/fragment_map" />
 
 </RelativeLayout>
