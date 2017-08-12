@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.magendanz.villanovamec.MainActivity">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/large_item_size"
         android:id="@+id/headerBar"
-        android:background="@color/novaDark"
+        android:background="@drawable/gradient_mec_light"
         android:orientation="horizontal"
         android:layout_alignParentTop="true">
 
@@ -24,62 +25,88 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="@string/app_name"
-            android:gravity="center_vertical"
-            android:textSize="@dimen/large_text_size"/>
+            android:gravity="center"
+            android:textSize="@dimen/large_text_size"
+            android:textColor="@color/novaWhite"
+            android:textStyle="bold"
+            android:fontFamily="sa"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/medium_item_size"
         android:id="@+id/tabbedBar"
-        android:background="@color/novaDark"
+        android:background="@drawable/gradient_mec_light"
         android:orientation="horizontal"
         android:layout_alignParentBottom="true">
 
 
-        <ImageView
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/schedule_button"
+            android:id="@+id/schedule_button_frame"
             android:layout_weight="1"
-            android:src="@drawable/calendar_icon"
-            android:padding="@dimen/medium_padding"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:onClick="switchToSchedule"/>
+            android:background="@color/transparent">
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/news_button"
-            android:layout_weight="1"
-            android:src="@drawable/news_icon"
-            android:padding="@dimen/medium_padding"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:onClick="switchToNews"/>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/schedule_button"
+                android:src="@drawable/calendar_icon"
+                android:padding="@dimen/medium_padding"
+                android:background="@drawable/color_ripple"
+                android:clickable="true"
+                android:onClick="switchToSchedule"/>
 
-        <ImageView
+        </FrameLayout>
+
+
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/map_button"
+            android:id="@+id/news_button_frame"
             android:layout_weight="1"
-            android:src="@drawable/map_icon"
-            android:padding="@dimen/medium_padding"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:onClick="switchToMap"/>
+            android:background="@color/transparent">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/news_button"
+                android:src="@drawable/news_icon"
+                android:padding="@dimen/medium_padding"
+                android:background="@drawable/color_ripple"
+                android:clickable="true"
+                android:onClick="switchToNews"/>
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/map_button_frame"
+            android:layout_weight="1"
+            android:background="@color/transparent">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/map_button"
+                android:src="@drawable/map_icon"
+                android:padding="@dimen/medium_padding"
+                android:background="@drawable/color_ripple"
+                android:clickable="true"
+                android:onClick="switchToMap"/>
+
+        </FrameLayout>
 
     </LinearLayout>
 
-    <fragment
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/fragment_container"
         android:layout_below="@id/headerBar"
-        android:layout_above="@id/tabbedBar"
-        android:name="com.magendanz.villanovamec.MapFragment"
-        tools:layout="@layout/fragment_map" />
+        android:layout_above="@id/tabbedBar"/>
 
 </RelativeLayout>

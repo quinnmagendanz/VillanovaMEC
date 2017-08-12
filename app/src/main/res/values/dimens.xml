@@ -6,4 +6,7 @@
     <dimen name="medium_padding">12dp</dimen>
 
     <dimen name="large_text_size">25sp</dimen>
+
+    <item name="villanova_lat" type="dimen" format="float">40.037270</item>
+    <item name="villanova_lng" type="dimen" format="float">-75.343516</item>
 </resources>

@@ -4,4 +4,6 @@
     <color name="novaDark">#FF001F5B</color>
     <color name="novaBlack">#FF000000</color>
     <color name="novaWhite">#FFFFFFFF</color>
+    <color name="selected_tab_fade">#20000090</color>
+    <color name="transparent">#00000000</color>
 </resources>
