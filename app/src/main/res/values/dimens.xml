@@ -1,9 +1,10 @@
 <resources>
 
-    <dimen name="large_item_size">64dp</dimen>
+    <dimen name="large_item_size">60dp</dimen>
     <dimen name="medium_item_size">56dp</dimen>
     <dimen name="small_padding">8dp</dimen>
     <dimen name="medium_padding">12dp</dimen>
+    <dimen name="large_padding">18dp</dimen>
 
     <dimen name="large_text_size">25sp</dimen>
 

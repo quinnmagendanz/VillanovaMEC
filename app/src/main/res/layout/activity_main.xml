@@ -31,6 +31,16 @@
             android:textStyle="bold"
             android:fontFamily="sa"/>
 
+        <ImageView
+            android:layout_width="@dimen/medium_item_size"
+            android:layout_height="@dimen/medium_item_size"
+            android:layout_alignParentEnd="true"
+            android:padding="@dimen/large_padding"
+            android:src="@drawable/settings_icon"
+            android:alpha=".3"
+            android:background="@drawable/color_ripple"
+            android:onClick="switchToSettings"/>
+
     </RelativeLayout>
 
     <LinearLayout
@@ -42,63 +52,49 @@
         android:layout_alignParentBottom="true">
 
 
-        <FrameLayout
+        <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/schedule_button_frame"
+            android:id="@+id/schedule_button"
+            android:src="@drawable/calendar_icon"
+            android:padding="@dimen/medium_padding"
             android:layout_weight="1"
-            android:background="@color/transparent">
+            android:background="@color/transparent"
+            android:clickable="true"
+            android:onClick="switchToSchedule"/>
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/schedule_button"
-                android:src="@drawable/calendar_icon"
-                android:padding="@dimen/medium_padding"
-                android:background="@drawable/color_ripple"
-                android:clickable="true"
-                android:onClick="switchToSchedule"/>
-
-        </FrameLayout>
-
-
-        <FrameLayout
+        <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/news_button_frame"
+            android:id="@+id/news_button"
+            android:src="@drawable/news_icon"
+            android:padding="@dimen/medium_padding"
             android:layout_weight="1"
-            android:background="@color/transparent">
+            android:background="@color/transparent"
+            android:clickable="true"
+            android:onClick="switchToNews"/>
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/news_button"
-                android:src="@drawable/news_icon"
-                android:padding="@dimen/medium_padding"
-                android:background="@drawable/color_ripple"
-                android:clickable="true"
-                android:onClick="switchToNews"/>
-
-        </FrameLayout>
-
-        <FrameLayout
+        <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/map_button_frame"
+            android:id="@+id/map_button"
+            android:src="@drawable/map_icon"
+            android:padding="@dimen/medium_padding"
             android:layout_weight="1"
-            android:background="@color/transparent">
+            android:background="@color/transparent"
+            android:clickable="true"
+            android:onClick="switchToMap"/>
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/map_button"
-                android:src="@drawable/map_icon"
-                android:padding="@dimen/medium_padding"
-                android:background="@drawable/color_ripple"
-                android:clickable="true"
-                android:onClick="switchToMap"/>
-
-        </FrameLayout>
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/ride_button"
+            android:src="@drawable/ride_icon"
+            android:padding="@dimen/medium_padding"
+            android:layout_weight="1"
+            android:background="@color/transparent"
+            android:clickable="true"
+            android:onClick="switchToRide"/>
 
     </LinearLayout>
 
