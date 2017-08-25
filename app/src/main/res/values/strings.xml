@@ -1,6 +1,11 @@
 <resources>
     <string name="app_name">Villanova M.E.C.</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="unit_name">NROTC Unit</string>
+    <string name ="field_name">Main Field</string>
+
+    <string name="permission_request_title">Location Permission Needed</string>
+    <string name="permission_request_message">This app needs the Location permission,
+        please accept to use location functionality</string>
+    <string name="permission_request_button">OK</string>
 </resources>

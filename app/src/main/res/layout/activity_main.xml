@@ -34,12 +34,13 @@
         <ImageView
             android:layout_width="@dimen/medium_item_size"
             android:layout_height="@dimen/medium_item_size"
+            android:id="@+id/settings_button"
             android:layout_alignParentEnd="true"
             android:padding="@dimen/large_padding"
             android:src="@drawable/settings_icon"
             android:alpha=".3"
             android:background="@drawable/color_ripple"
-            android:onClick="switchToSettings"/>
+            android:onClick="switchTabs"/>
 
     </RelativeLayout>
 
@@ -51,7 +52,6 @@
         android:orientation="horizontal"
         android:layout_alignParentBottom="true">
 
-
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -61,7 +61,7 @@
             android:layout_weight="1"
             android:background="@color/transparent"
             android:clickable="true"
-            android:onClick="switchToSchedule"/>
+            android:onClick="switchTabs"/>
 
         <ImageView
             android:layout_width="match_parent"
@@ -72,7 +72,7 @@
             android:layout_weight="1"
             android:background="@color/transparent"
             android:clickable="true"
-            android:onClick="switchToNews"/>
+            android:onClick="switchTabs"/>
 
         <ImageView
             android:layout_width="match_parent"
@@ -83,7 +83,7 @@
             android:layout_weight="1"
             android:background="@color/transparent"
             android:clickable="true"
-            android:onClick="switchToMap"/>
+            android:onClick="switchTabs"/>
 
         <ImageView
             android:layout_width="match_parent"
@@ -94,7 +94,7 @@
             android:layout_weight="1"
             android:background="@color/transparent"
             android:clickable="true"
-            android:onClick="switchToRide"/>
+            android:onClick="switchTabs"/>
 
     </LinearLayout>
 

@@ -8,6 +8,11 @@
 
     <dimen name="large_text_size">25sp</dimen>
 
-    <item name="villanova_lat" type="dimen" format="float">40.037270</item>
-    <item name="villanova_lng" type="dimen" format="float">-75.343516</item>
+    <item name="villanova_lat" type="raw" format="float">40.036470</item>
+    <item name="villanova_lng" type="raw" format="float">-75.340514</item>
+    <item name="unit_lat" type="raw" format="float">40.037952</item>
+    <item name="unit_lng" type="raw" format="float">-75.343949</item>
+    <item name="field_lat" type="raw" format="float">40.033052</item>4
+    <item name="field_lng" type="raw" format="float">-75.336555</item>
+    <item name="map_init_zoom" type="raw" format="float">15.7</item>
 </resources>
