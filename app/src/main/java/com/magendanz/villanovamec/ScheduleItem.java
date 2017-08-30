@@ -11,10 +11,14 @@ public class ScheduleItem implements MecItem {
     private String time;
     private String location;
 
-    public ScheduleItem(String event, String time, String location){
-        this.event = event;
-        this.time = time;
-        this.location = location;
+    /**
+     * @param info String array with elements as following:
+     *             message type, event description, time of event, location of event
+     */
+    public ScheduleItem(String[] info){
+        this.event = info[1];
+        this.time = info[2];
+        this.location = info[3];
     }
 
     @Override

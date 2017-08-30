@@ -11,10 +11,14 @@ public class NewsItem implements MecItem {
     private String description;
     private String location;
 
-    public NewsItem(String headline, String description, String location){
-        this.headline = headline;
-        this.description = description;
-        this.location = location;
+    /**
+     * @param info String array with elements as following:
+     *             message type, event headline, event description, location of event
+     */
+    public NewsItem(String[] info){
+        this.headline = info[1];
+        this.description = info[2];
+        this.location = info[3];
     }
 
     @Override

@@ -8,12 +8,13 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 /**
- * Client for getting and setting news and calendar items from the server
+ * Client for getting and setting news and calendar items from the server. All responses and
+ * requests are semicolon separated sequences of strings
  */
 
 public class MecClient {
 
-    private static final String SPLIT_STRING = ";\\s+";
+    private static final String SPLIT_STRING = ";";
 
     private Socket socket;
     private BufferedReader in;
@@ -46,7 +47,8 @@ public class MecClient {
     /**
      * Get the next set of MecItems from the server. Requires that the first line specify
      * the number of MecItems to receive
-     * @return all of the MecItems sent by the server
+     * @return an array of all of the MecItems sent by the server or null in the place of an
+     *          invalid response
      * @throws IOException if network or server failure or bad message formatting
      */
     public MecItem[] getReply() throws IOException {
@@ -55,7 +57,12 @@ public class MecClient {
             int entries = Integer.parseInt(reply);
             MecItem[] responses = new MecItem[entries];
             for (int i = 0; i < entries; i++){
-                responses[i] = parse(reply);
+                try {
+                    responses[i] = parse(reply);
+                } catch (IllegalArgumentException e){
+                    responses[i] = null;
+                    System.err.println("Response cannot be parsed.");
+                }
             }
             return responses;
         } catch (NumberFormatException e){
@@ -79,16 +86,16 @@ public class MecClient {
      * @return the MecItem sent by the server
      * @throws IllegalArgumentException when error is encountered with parsing
      */
-    private static MecItem parse(String input) throws IOException{
+    private static MecItem parse(String input) throws IllegalArgumentException{
         String[] information = input.split(SPLIT_STRING);
         if (NewsItem.typeMatches(information[0])){
-            return new NewsItem(information[1], information[2], information[3]);
+            return new NewsItem(information);
         } else if (ScheduleItem.typeMatches(information[0])){
-            return new NewsItem(information[1], information[2], information[3]);
+            return new ScheduleItem(information);
         } else if (PointOfContact.typeMatches(information[0])){
-            return new NewsItem(information[1], information[2], information[3]);
+            return new PointOfContact(information);
         } else {
-            throw new IOException();
+            throw new IllegalArgumentException();
         }
     }
 }

@@ -11,10 +11,14 @@ public class PointOfContact implements MecItem {
     private String number;
     private String location;
 
-    public PointOfContact(String name, String number, String location) {
-        this.name = name;
-        this.number = number;
-        this.location = location;
+    /**
+     * @param info String array with elements as following:
+     *             message type, name of POC, phone number of POC, location of POC
+     */
+    public PointOfContact(String[] info) {
+        this.name = info[1];
+        this.number = info[2];
+        this.location = info[3];
     }
 
     @Override

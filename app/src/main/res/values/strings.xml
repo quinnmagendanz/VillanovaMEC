@@ -4,6 +4,9 @@
     <string name="unit_name">NROTC Unit</string>
     <string name ="field_name">Main Field</string>
 
+    <string name="schedule_title">Schedule of Events</string>
+    <string name="news_title">Announcements</string>
+
     <string name="permission_request_title">Location Permission Needed</string>
     <string name="permission_request_message">This app needs the Location permission,
         please accept to use location functionality</string>
