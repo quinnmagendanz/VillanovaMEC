@@ -13,9 +13,16 @@ import android.view.ViewGroup;
  */
 public class RideFragment extends Fragment {
 
+    private String name;
+    private String location;
+    private String phoneNumber;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        name = "Michelle Mathews";
+        location = "NROTC Unit";
+        phoneNumber = "9852372393";
     }
 
     @Override
@@ -31,5 +38,15 @@ public class RideFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+    /**
+     *
+     * @param name the name of the person to route all questions and rides through
+     * @param location the location that the POC is located
+     * @param phoneNumber the phone number of the POC. Should be a string of 10 integers
+     */
+    public void setContactInfo(String name, String location, String phoneNumber){
+
     }
 }

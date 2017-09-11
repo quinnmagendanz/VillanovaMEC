@@ -3,16 +3,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="@dimen/medium_padding"
+    android:paddingStart="@dimen/medium_padding"
+    android:paddingEnd="@dimen/medium_padding"
     android:background="@color/novaWhite"
-    tools:context="com.magendanz.villanovamec.ScheduleFragment">
+    tools:context="com.magendanz.villanovamec.MecListFragment">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/list_title_box"
         android:text="@string/schedule_title"
         android:textSize="@dimen/large_text_size"
-        android:paddingBottom="@dimen/medium_padding"
+        android:padding="@dimen/medium_padding"
         android:textColor="@color/novaBlue"/>
 
     <View
@@ -23,6 +25,7 @@
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:id="@+id/schedule_list"
         android:padding="@dimen/medium_padding"/>
 
 </LinearLayout>

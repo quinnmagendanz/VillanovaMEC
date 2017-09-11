@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.Toast;
@@ -29,15 +30,23 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 public class MainActivity extends FragmentActivity
         implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LocationListener {
+        LocationListener,
+        SwipeRefreshLayout.OnRefreshListener{
 
-    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+    private static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     private static final float TAB_FADE = .5f;
     private static final float SETTINGS_FADE = .3f;
+    private static final int PORT_NUMBER = 2222;
+    private static final String HOSTNAME = "magendanz.com";
+    private static final String LOAD_REQUEST = "request";
 
     private View scheduleButton;
     private View newsButton;
@@ -45,12 +54,14 @@ public class MainActivity extends FragmentActivity
     private View rideButton;
     private View settingsButton;
 
-    private ScheduleFragment scheduleFragment;
-    private NewsFragment newsFragment;
+    private MecClient mecClient;
+    private MecListFragment scheduleFragment;
+    private MecListFragment newsFragment;
     private MapFragment mappingFragment;
     private RideFragment rideFragment;
     private SettingsFragment settingsFragment;
     private Resources res;
+    private boolean offline;
 
     GoogleMap mGoogleMap;
     LocationRequest mLocationRequest;
@@ -68,10 +79,17 @@ public class MainActivity extends FragmentActivity
         rideButton = findViewById(R.id.ride_button);
         settingsButton = findViewById(R.id.settings_button);
         res = getResources();
-        scheduleFragment = new ScheduleFragment();
-        newsFragment = new NewsFragment();
+        scheduleFragment = new MecListFragment();
+        scheduleFragment.setName(res.getString(R.string.schedule_title));
+        newsFragment = new MecListFragment();
+        newsFragment.setName(res.getString(R.string.news_title));
         rideFragment = new RideFragment();
         settingsFragment = new SettingsFragment();
+        mecClient = null;
+
+        // get responses from server or load default responses if cannot establish connection
+        MecItem[] responses = getServerReply();
+        addResponses(responses);
 
         TypedValue out = new TypedValue();
         res.getValue(R.raw.villanova_lat, out, true);
@@ -100,6 +118,7 @@ public class MainActivity extends FragmentActivity
         }
     }
 
+    @Override
     public void onMapReady(GoogleMap googleMap){
         mGoogleMap=googleMap;
         mGoogleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
@@ -182,6 +201,9 @@ public class MainActivity extends FragmentActivity
         }
     }
 
+    /**
+     * Check that we have permission to access the location
+     */
     private void checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -252,6 +274,78 @@ public class MainActivity extends FragmentActivity
         }
     }
 
+    @Override
+    public void onRefresh(){
+        getServerReply();
+    }
+
+    /**
+     * Initialize the server if possible and return the first set of responses
+     *
+     * @return the initial set of responses received from the server
+     */
+    private MecItem[] getServerReply(){
+        MecItem[] responses;
+        try {
+            if (mecClient == null){
+                mecClient = new MecClient(HOSTNAME, PORT_NUMBER, res.openRawResource(R.raw.DefaultResponse));
+            }
+            mecClient.sendRequest(LOAD_REQUEST);
+            responses = mecClient.getReply();
+        } catch (IOException e){
+            mecClient = null;
+            responses = getDefaultRelpy();
+        }
+        return responses;
+    }
+
+    /**
+     * Get a default server response when server connection cannot be achieved
+     *
+     * @return the default server response stored locally
+     */
+    private MecItem[] getDefaultRelpy(){
+        BufferedReader defaultIn = new BufferedReader(new InputStreamReader(
+                res.openRawResource(R.raw.DefaultResponse)));
+        try {
+            int entries = Integer.parseInt(defaultIn.readLine());
+            offline = true;
+            return MecClient.getResponses(defaultIn, entries);
+        } catch (IOException | NumberFormatException f){
+            System.err.println("Formatting error in default response");
+            return new MecItem[0];
+        }
+    }
+
+    /**
+     * @param responses the MecItems to add into the different Mec lists
+     */
+    private void addResponses(MecItem[] responses){
+        scheduleFragment.clearRows();
+        newsFragment.clearRows();
+        for(MecItem response : responses){
+            if(response instanceof ScheduleItem){
+                scheduleFragment.addElement(response);
+            } else if (response instanceof NewsItem){
+                newsFragment.addElement(response);
+            } else if (response instanceof PointOfContact){
+                try {
+                    long phoneNumber = Long.parseLong(response.getDetails());
+                    if (response.getDetails().length() == 10){
+                        rideFragment.setContactInfo(response.getTitle(), response.getLocation(), response.getDetails());
+                    }
+                } catch (NumberFormatException e){
+                    System.err.println("Invalid phone number received");
+                }
+            }
+        }
+    }
+
+    /**
+     * Switch to the new fragment specified by the calling button
+     *
+     * @param view the button that activated the switch
+     */
     public void switchTabs(View view){
         scheduleButton.setAlpha(TAB_FADE);
         newsButton.setAlpha(TAB_FADE);

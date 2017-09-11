@@ -1,11 +1,15 @@
 package com.magendanz.villanovamec;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 
 /**
  * Client for getting and setting news and calendar items from the server. All responses and
@@ -15,8 +19,10 @@ import java.net.Socket;
 public class MecClient {
 
     private static final String SPLIT_STRING = ";";
+    private static final int MAX_WAIT_TIME = 5000;
 
     private Socket socket;
+    private BufferedReader defaultIn;
     private BufferedReader in;
     private PrintWriter out;
 
@@ -25,10 +31,12 @@ public class MecClient {
     /**
      * Make a SquareClient and connect it to a server running on
      * hostname at the specified port.
-     * @throws IOException if can't connect
+     * @throws IOException if can't load default file
      */
-    public MecClient(String hostname, int port) throws IOException {
+    public MecClient(String hostname, int port, InputStream defaultFile) throws IOException {
+        defaultIn = new BufferedReader(new InputStreamReader(defaultFile));
         socket = new Socket(hostname, port);
+        socket.setSoTimeout(MAX_WAIT_TIME);
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
     }
@@ -52,22 +60,40 @@ public class MecClient {
      * @throws IOException if network or server failure or bad message formatting
      */
     public MecItem[] getReply() throws IOException {
-        String reply = in.readLine();
-        try{
-            int entries = Integer.parseInt(reply);
-            MecItem[] responses = new MecItem[entries];
-            for (int i = 0; i < entries; i++){
-                try {
-                    responses[i] = parse(reply);
-                } catch (IllegalArgumentException e){
-                    responses[i] = null;
-                    System.err.println("Response cannot be parsed.");
-                }
+        try {
+            try {
+                String reply = in.readLine();
+                int entries = Integer.parseInt(reply);
+                return getResponses(in, entries);
+            } catch (SocketTimeoutException e) {
+                String reply = defaultIn.readLine();
+                int entries = Integer.parseInt(reply);
+                return getResponses(defaultIn, entries);
             }
-            return responses;
         } catch (NumberFormatException e){
+            System.err.println("Invalid response format");
             throw new IOException();
         }
+    }
+
+    /**
+     * @param inReader the BufferedReader being used to read the response
+     * @param entries the number of entries in the message
+     * @return all of the MecItems from the response
+     * @throws IOException
+     */
+    public static MecItem[] getResponses(BufferedReader inReader, int entries) throws IOException{
+        MecItem[] responses = new MecItem[entries];
+        for (int i = 0; i < entries; i++){
+            try {
+                String reply = inReader.readLine();
+                responses[i] = parse(reply);
+            } catch (IllegalArgumentException | SocketTimeoutException e){
+                responses[i] = null;
+                System.err.println("Response cannot be parsed.");
+            }
+        }
+        return responses;
     }
 
     /**
