@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="novaBlue">#FF01B6E6</color>
+    <color name="novaSubBlue">#CC01B6E6</color>
     <color name="novaDark">#FF001F5B</color>
-    <color name="novaSubDark">#BB001F5B</color>
+    <color name="novaSubDark">#CC001F5B</color>
     <color name="novaBlack">#FF000000</color>
     <color name="novaWhite">#FFFFFFFF</color>
     <color name="novaOffWhite">#FFdedcdb</color>

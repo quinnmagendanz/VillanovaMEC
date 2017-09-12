@@ -20,11 +20,12 @@ public class MecListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         listAdapter = new MecListAdapter(getActivity(), new ArrayList<MecItem>());
+        name = "Mec List";
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_schedule, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_mec_list, container, false);
         ((TextView) rootView.findViewById(R.id.list_title_box)).setText(name);
         ((ListView) rootView.findViewById(R.id.schedule_list)).setAdapter(listAdapter);
         return rootView;
@@ -54,6 +55,9 @@ public class MecListFragment extends Fragment {
         listAdapter.removeAll();
     }
 
+    /**
+     * @param name the title to display at the top of the list
+     */
     public void setName(String name){
         this.name = name;
     }

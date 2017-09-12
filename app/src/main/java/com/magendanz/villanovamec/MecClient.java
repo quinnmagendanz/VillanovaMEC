@@ -19,10 +19,8 @@ import java.net.SocketTimeoutException;
 public class MecClient {
 
     private static final String SPLIT_STRING = ";";
-    private static final int MAX_WAIT_TIME = 5000;
 
     private Socket socket;
-    private BufferedReader defaultIn;
     private BufferedReader in;
     private PrintWriter out;
 
@@ -33,10 +31,9 @@ public class MecClient {
      * hostname at the specified port.
      * @throws IOException if can't load default file
      */
-    public MecClient(String hostname, int port, InputStream defaultFile) throws IOException {
-        defaultIn = new BufferedReader(new InputStreamReader(defaultFile));
+    public MecClient(String hostname, int port, int maxWaitTime) throws IOException {
         socket = new Socket(hostname, port);
-        socket.setSoTimeout(MAX_WAIT_TIME);
+        socket.setSoTimeout(maxWaitTime);
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
     }
@@ -59,17 +56,11 @@ public class MecClient {
      *          invalid response
      * @throws IOException if network or server failure or bad message formatting
      */
-    public MecItem[] getReply() throws IOException {
+    public MecItem[] getReply() throws IOException, SocketTimeoutException {
         try {
-            try {
-                String reply = in.readLine();
-                int entries = Integer.parseInt(reply);
-                return getResponses(in, entries);
-            } catch (SocketTimeoutException e) {
-                String reply = defaultIn.readLine();
-                int entries = Integer.parseInt(reply);
-                return getResponses(defaultIn, entries);
-            }
+            String reply = in.readLine();
+            int entries = Integer.parseInt(reply);
+            return getResponses(in, entries);
         } catch (NumberFormatException e){
             System.err.println("Invalid response format");
             throw new IOException();

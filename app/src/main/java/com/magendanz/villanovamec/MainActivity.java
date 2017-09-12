@@ -45,6 +45,7 @@ public class MainActivity extends FragmentActivity
     private static final float TAB_FADE = .5f;
     private static final float SETTINGS_FADE = .3f;
     private static final int PORT_NUMBER = 2222;
+    private static final int MAX_WAIT_TIME = 5000;
     private static final String HOSTNAME = "magendanz.com";
     private static final String LOAD_REQUEST = "request";
 
@@ -53,8 +54,8 @@ public class MainActivity extends FragmentActivity
     private View mapButton;
     private View rideButton;
     private View settingsButton;
-
     private MecClient mecClient;
+    private LoadingFragment loadingFragment;
     private MecListFragment scheduleFragment;
     private MecListFragment newsFragment;
     private MapFragment mappingFragment;
@@ -79,6 +80,7 @@ public class MainActivity extends FragmentActivity
         rideButton = findViewById(R.id.ride_button);
         settingsButton = findViewById(R.id.settings_button);
         res = getResources();
+        loadingFragment = new LoadingFragment();
         scheduleFragment = new MecListFragment();
         scheduleFragment.setName(res.getString(R.string.schedule_title));
         newsFragment = new MecListFragment();
@@ -87,10 +89,23 @@ public class MainActivity extends FragmentActivity
         settingsFragment = new SettingsFragment();
         mecClient = null;
 
-        // get responses from server or load default responses if cannot establish connection
-        MecItem[] responses = getServerReply();
-        addResponses(responses);
+        // get responses from server and setup map on new thread
+        new Thread(new Runnable() {
+            public void run() {
+                loadContent();
+            }
+        }).start();
 
+        // set a spinning loader as the initial fragment until content is loaded
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, loadingFragment);
+        transaction.commit();
+    }
+
+    /**
+     * Load the map data and server responses
+     */
+    private void loadContent(){
         TypedValue out = new TypedValue();
         res.getValue(R.raw.villanova_lat, out, true);
         final float initLat = out.getFloat();
@@ -105,6 +120,8 @@ public class MainActivity extends FragmentActivity
         mappingFragment = MapFragment.newInstance(new GoogleMapOptions().camera(cameraPosition));
         mappingFragment.getMapAsync(this);
 
+        MecItem[] responses = getServerReply();
+        addResponses(responses);
         switchTabs(scheduleButton);
     }
 
@@ -164,6 +181,9 @@ public class MainActivity extends FragmentActivity
                 .position(new LatLng(fieldLat, fieldLong)).title(res.getString(R.string.field_name)));
     }
 
+    /**
+     * build the API client once permissions have been granted
+     */
     protected synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -280,7 +300,9 @@ public class MainActivity extends FragmentActivity
     }
 
     /**
-     * Initialize the server if possible and return the first set of responses
+     * Initialize the server if possible and return the first set of responses.
+     * If the server cannot both be initialized and a response received in less time than
+     * MAX_WAIT_TIME, will return the default response.
      *
      * @return the initial set of responses received from the server
      */
@@ -288,7 +310,7 @@ public class MainActivity extends FragmentActivity
         MecItem[] responses;
         try {
             if (mecClient == null){
-                mecClient = new MecClient(HOSTNAME, PORT_NUMBER, res.openRawResource(R.raw.DefaultResponse));
+                mecClient = new MecClient(HOSTNAME, PORT_NUMBER, MAX_WAIT_TIME);
             }
             mecClient.sendRequest(LOAD_REQUEST);
             responses = mecClient.getReply();
@@ -306,7 +328,7 @@ public class MainActivity extends FragmentActivity
      */
     private MecItem[] getDefaultRelpy(){
         BufferedReader defaultIn = new BufferedReader(new InputStreamReader(
-                res.openRawResource(R.raw.DefaultResponse)));
+                res.openRawResource(R.raw.default_response)));
         try {
             int entries = Integer.parseInt(defaultIn.readLine());
             offline = true;
