@@ -32,7 +32,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:id="@+id/radio_group">
+                android:id="@+id/radio_group"
+                android:saveEnabled="false">
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -40,7 +41,8 @@
                     android:text="Add New"
                     android:textColor="@color/novaOffWhite"
                     android:id="@+id/add_radio"
-                    android:onClick="showEntrySelect"/>
+                    android:onClick="showEntrySelect"
+                    android:saveEnabled="false"/>
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -48,7 +50,8 @@
                     android:text="Edit Existing"
                     android:textColor="@color/novaOffWhite"
                     android:id="@+id/edit_radio"
-                    android:onClick="showEntrySelect"/>
+                    android:onClick="showEntrySelect"
+                    android:saveEnabled="false"/>
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -56,7 +59,8 @@
                     android:text="Delete Existing"
                     android:textColor="@color/novaOffWhite"
                     android:id="@+id/delete_radio"
-                    android:onClick="showEntrySelect"/>
+                    android:onClick="showEntrySelect"
+                    android:saveEnabled="false"/>
             </RadioGroup>
 
             <View
@@ -286,7 +290,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:inputType="numberDecimal"
+                        android:inputType="numberDecimal|numberSigned"
                         android:background="@drawable/text_field"
                         android:hint="Latitude"
                         android:id="@+id/lat_field"/>
@@ -298,7 +302,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:inputType="numberDecimal"
+                        android:inputType="numberDecimal|numberSigned"
                         android:background="@drawable/text_field"
                         android:hint="Longitude"
                         android:id="@+id/long_field"/>
