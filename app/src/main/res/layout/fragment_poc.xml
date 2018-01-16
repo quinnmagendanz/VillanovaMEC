@@ -1,13 +1,78 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/small_padding"
+    android:background="@color/novaGrey"
     tools:context="com.magendanz.villanovamec.POCFragment">
-
-    <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="b" />
+        android:layout_height="wrap_content"
+        android:text="Edit Point of Contact"
+        android:textColor="@color/novaOffWhite"
+        android:textSize="@dimen/medium_text_size"
+        android:paddingBottom="@dimen/medium_padding"
+        android:id="@+id/settings_title_field"/>
 
-</FrameLayout>
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/divider_height"
+        android:background="@color/novaWhite"
+        android:layout_marginBottom="@dimen/small_padding"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/small_padding"
+        android:layout_marginBottom="@dimen/extra_small_padding"
+        android:text="Title"
+        android:textColor="@color/novaOffWhite"
+        android:textSize="@dimen/small_text_size"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text|textCapWords"
+        android:background="@drawable/text_field"
+        android:id="@+id/poc_name_field"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/small_padding"
+        android:layout_marginBottom="@dimen/extra_small_padding"
+        android:text="Phone Number"
+        android:textColor="@color/novaOffWhite"
+        android:textSize="@dimen/small_text_size"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:background="@drawable/text_field"
+        android:id="@+id/poc_number_field"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/small_padding"
+        android:layout_marginBottom="@dimen/extra_small_padding"
+        android:text="Select Location"
+        android:textColor="@color/novaOffWhite"
+        android:textSize="@dimen/small_text_size"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/small_padding"
+        android:background="@drawable/text_field">
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawSelectorOnTop="true"
+            android:prompt="@string/location_hint_field"
+            android:id="@+id/poc_location_field"/>
+    </RelativeLayout>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:text="Edit POC"
+        android:onClick="updatePOC" />
+</LinearLayout>

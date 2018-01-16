@@ -1,6 +1,5 @@
 package com.magendanz.villanovamec;
 
-import android.*;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -75,6 +74,7 @@ public class MainActivity extends FragmentActivity
     private long settingsPresses = 0;
     private long settingsPressTime = 0;
     private int settingsSection;
+    private boolean loading = false;
 
     private MecItem pointOfContact;
     private List<MecItem> calendarItems;
@@ -122,6 +122,8 @@ public class MainActivity extends FragmentActivity
         calendarItems = new ArrayList<>();
         noticeItems = new ArrayList<>();
         locationItems = new ArrayList<>();
+        pocFragment.addPOC(pointOfContact);
+        pocFragment.setLocationsPOC(locationItems);
         rideFragment.setLocationsList(locationItems);
 
         // Setup refresh listener which triggers new data loading
@@ -129,14 +131,19 @@ public class MainActivity extends FragmentActivity
         refreshView.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh(){
+                loading = true;
                 loadContent();
-                refreshView.setRefreshing(false);
-                newsFragment.notifyDataSetChanged();
-                scheduleFragment.notifyDataSetChanged();
             }
         });
         refreshView.setColorSchemeResources(R.color.novaBlue, R.color.novaGrey, R.color.novaDark, R.color.novaOffWhite);
 
+        refreshView.post(new Runnable() {
+            @Override
+            public void run() {
+                loading = true;
+                refreshView.setRefreshing(true);
+            }
+        });
         loadContent();
 
         // create welcome page and set to active fragment
@@ -383,10 +390,9 @@ public class MainActivity extends FragmentActivity
     //---------------------------- Refresh and Database -------------------------------------
 
     /**
-     * Load the server responses
+     * Load the server responses for DynamoDB table
      */
     private void loadContent(){
-
         // load items from AWS table
         Runnable runnable = new Runnable() {
             public void run() {
@@ -401,11 +407,22 @@ public class MainActivity extends FragmentActivity
                 DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
                 PaginatedScanList<MecItem> result = mapper.scan(MecItem.class, scanExpression);
                 addResponses(result);
+
+                refreshView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        refreshView.setRefreshing(false);
+                        newsFragment.notifyDataSetChanged();
+                        scheduleFragment.notifyDataSetChanged();
+                        loading = false;
+                    }
+                });
             }
         };
         Thread mythread = new Thread(runnable);
         mythread.start();
     }
+
 
     /**
      * @param responses the MecItems to add into the different Mec lists
@@ -418,6 +435,7 @@ public class MainActivity extends FragmentActivity
             switch (response.getMecItemType()) {
                 case 0:
                     pointOfContact = response;
+                    pocFragment.addPOC(pointOfContact);
                     break;
                 case 1:
                     locationItems.add(response);
@@ -445,6 +463,9 @@ public class MainActivity extends FragmentActivity
      * @param view the button that activated the switch
      */
     public void switchTabs(View view){
+        if (loading) {
+            return;
+        }
         scheduleButton.setAlpha(TAB_FADE);
         newsButton.setAlpha(TAB_FADE);
         mapButton.setAlpha(TAB_FADE);
@@ -540,15 +561,23 @@ public class MainActivity extends FragmentActivity
 
     // --------------------------------- Ride Controls ---------------------------------------
 
+    /**
+     * Send an SMS message to the POC with given message fields
+     *
+     * @param view
+     */
     public void submitMessage(View view) {
+        // get SMS permission
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS)
                 != PackageManager.PERMISSION_GRANTED) {
             checkSMSPermission();
+            // don't send sms if permissions not given
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS)
                     != PackageManager.PERMISSION_GRANTED) {
                 return;
             }
         }
+
         String message = "MEC Message\nPoint Of Contact: ";
         message += pointOfContact.getMainField() + "\n";
         message += "From: " + ((EditText)findViewById(R.id.question_name_field)).getText() + "\n\n";
@@ -559,6 +588,7 @@ public class MainActivity extends FragmentActivity
         }
         message += ((EditText)findViewById(R.id.message_field)).getText();
 
+        // send message
         SmsManager smsManager = SmsManager.getDefault();
         // if message length is too long messages are divided
         List<String> messages = smsManager.divideMessage(message);
@@ -604,23 +634,35 @@ public class MainActivity extends FragmentActivity
             newItem.setTitle(newItem.getMainField() + " (" + newItem.getTime() + ")");
         }
 
-        new Thread(new Runnable() {
-            public void run() {
-                // Initialize the Amazon Cognito credentials provider
-                CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
-                        getApplicationContext(),
-                        "us-east-1:971621f7-8ea0-4211-809c-040ed268b0be", // Identity pool ID
-                        Regions.US_EAST_1 // Region
-                );
-                AmazonDynamoDBClient ddbClient = new AmazonDynamoDBClient(credentialsProvider);
-                DynamoDBMapper mapper = new DynamoDBMapper(ddbClient);
-                mapper.save(newItem);
-            }
-        }).start();
-
+        saveMecEntry(newItem);
         endSettingsChange();
     }
 
+    public void updatePOC(View view) {
+        String number = ((EditText)findViewById(R.id.poc_number_field)).getText().toString();
+        try {
+            long temp = Long.parseLong(number);
+            if (number.length() != 10) {
+                throw new NumberFormatException();
+            }
+            pointOfContact.setMainField(
+                    ((EditText)findViewById(R.id.poc_name_field)).getText().toString());
+            pointOfContact.setSecondaryField(
+                    ((EditText)findViewById(R.id.poc_number_field)).getText().toString());
+            pointOfContact.setLocation(
+                    ((Spinner)findViewById(R.id.poc_location_field)).getSelectedItem().toString());
+        } catch (NumberFormatException e) {
+            System.err.println("Invalid phone number for point of contact.");
+        }
+        saveMecEntry(pointOfContact);
+        endSettingsChange();
+    }
+
+    /**
+     * Delete the selected entry in the settings spinner
+     *
+     * @param view
+     */
     public void deleteEntry(View view) {
         final MecItem item = (MecItem)((Spinner)findViewById(R.id.existing_entry_field)).getSelectedItem();
         deleteMecEntry(item);
@@ -638,13 +680,38 @@ public class MainActivity extends FragmentActivity
         endSettingsChange();
     }
 
-    public void endSettingsChange() {
+    /**
+     * switch back to settings main screen
+     */
+    private void endSettingsChange() {
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, settingsFragment);
         transaction.commit();
     }
 
-    public void deleteMecEntry(final MecItem entry) {
+    /**
+     * @param entry the MecItem to tell the DynamoDB table to save/edit
+     */
+    private void saveMecEntry(final MecItem entry) {
+        new Thread(new Runnable() {
+            public void run() {
+                // Initialize the Amazon Cognito credentials provider
+                CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
+                        getApplicationContext(),
+                        "us-east-1:971621f7-8ea0-4211-809c-040ed268b0be", // Identity pool ID
+                        Regions.US_EAST_1 // Region
+                );
+                AmazonDynamoDBClient ddbClient = new AmazonDynamoDBClient(credentialsProvider);
+                DynamoDBMapper mapper = new DynamoDBMapper(ddbClient);
+                mapper.save(entry);
+            }
+        }).start();
+    }
+
+    /**
+     * @param entry the MecItem to tell the DynamoDB table to delete
+     */
+    private void deleteMecEntry(final MecItem entry) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -661,11 +728,19 @@ public class MainActivity extends FragmentActivity
         }).start();
     }
 
+    /**
+     * Show the correct field type for editing a MecItem. Called after add selected or spinner item selected
+     *
+     * @param view
+     */
     public void showFields(View view) {
+        // delete only needs spinner
         if (((RadioButton)findViewById(R.id.delete_radio)).isChecked()) {
             findViewById(R.id.delete_entry_button).setVisibility(View.VISIBLE);
         } else if (((RadioButton)findViewById(R.id.edit_radio)).isChecked()) {
+            // populate fields for editing
             MecItem currentItem  = (MecItem)((Spinner)findViewById(R.id.existing_entry_field)).getSelectedItem();
+            // populate location or generic entry
             if (settingsSection == MecItem.LocationItem) {
                 ((EditText)findViewById(R.id.loc_title_field)).setText(currentItem.getTitle());
                 ((EditText)findViewById(R.id.lat_field)).setText(currentItem.getMainField());
@@ -685,6 +760,7 @@ public class MainActivity extends FragmentActivity
             }
             findViewById(R.id.edit_entry_button).setVisibility(View.VISIBLE);
         } else {
+            // show empty sections for adding new MecItem
             if (settingsSection == MecItem.LocationItem) {
                 findViewById(R.id.location_fields_section).setVisibility(View.VISIBLE);
             } else {
@@ -694,6 +770,11 @@ public class MainActivity extends FragmentActivity
         }
     }
 
+    /**
+     * Show the spinner for selecting existing MecItems
+     *
+     * @param view
+     */
     public void showEntrySelect(View view) {
         findViewById(R.id.select_section).setVisibility(View.GONE);
         findViewById(R.id.entry_fields_section).setVisibility(View.GONE);

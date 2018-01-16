@@ -36,6 +36,7 @@ public class RideFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_ride, container, false);
 
+        // listener to show ride fields when checkbox marked
         CheckBox box = (CheckBox)view.findViewById(R.id.ride_toggle);
         box.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,6 +54,7 @@ public class RideFragment extends Fragment {
         }
         displayList.add("Other (Specify below)");
 
+        // spinner adapters
         ArrayAdapter<String> pickupAdapter = new ArrayAdapter<>(
                 getActivity(),
                 android.R.layout.simple_spinner_item,
