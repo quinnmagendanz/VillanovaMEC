@@ -6,6 +6,12 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.Spinner;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A fragment representing the ride page that requests a ride by generating a text message
@@ -16,6 +22,7 @@ public class RideFragment extends Fragment {
     private String name;
     private String location;
     private String phoneNumber;
+    private List<MecItem> locationsList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -27,7 +34,38 @@ public class RideFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_ride, container, false);
+        final View view = inflater.inflate(R.layout.fragment_ride, container, false);
+
+        CheckBox box = (CheckBox)view.findViewById(R.id.ride_toggle);
+        box.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int visibility = ((CheckBox)v).isChecked() ? View.VISIBLE : View.GONE;
+                view.findViewById(R.id.ride_field_section).setVisibility(visibility);
+            }
+        });
+        box.setChecked(false);
+        view.findViewById(R.id.ride_field_section).setVisibility(View.GONE);
+
+        List<String> displayList = new ArrayList<>();
+        for(MecItem p : locationsList) {
+            displayList.add(p.getTitle());
+        }
+        displayList.add("Other (Specify below)");
+
+        ArrayAdapter<String> pickupAdapter = new ArrayAdapter<>(
+                getActivity(),
+                android.R.layout.simple_spinner_item,
+                displayList
+        );
+        ArrayAdapter<String> dropoffAdapter = new ArrayAdapter<>(
+                getActivity(),
+                android.R.layout.simple_spinner_item,
+                displayList
+        );
+        ((Spinner)view.findViewById(R.id.pickup_field)).setAdapter(pickupAdapter);
+        ((Spinner)view.findViewById(R.id.dropoff_field)).setAdapter(dropoffAdapter);
+        return view;
     }
 
     @Override
@@ -40,13 +78,7 @@ public class RideFragment extends Fragment {
         super.onDetach();
     }
 
-    /**
-     *
-     * @param name the name of the person to route all questions and rides through
-     * @param location the location that the POC is located
-     * @param phoneNumber the phone number of the POC. Should be a string of 10 integers
-     */
-    public void setContactInfo(String name, String location, String phoneNumber){
-
+    public void setLocationsList(List<MecItem> oldList) {
+        locationsList = oldList;
     }
 }

@@ -10,22 +10,24 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MecListFragment extends Fragment {
 
+    private List<MecItem> itemList;
+    private View rootView;
     private MecListAdapter listAdapter;
-    private String name;
+    private String name = "Mec List";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        listAdapter = new MecListAdapter(getActivity(), new ArrayList<MecItem>());
-        name = "Mec List";
+        listAdapter = new MecListAdapter(getActivity(), itemList);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_mec_list, container, false);
+        rootView = inflater.inflate(R.layout.fragment_mec_list, container, false);
         ((TextView) rootView.findViewById(R.id.list_title_box)).setText(name);
         ((ListView) rootView.findViewById(R.id.schedule_list)).setAdapter(listAdapter);
         return rootView;
@@ -42,17 +44,24 @@ public class MecListFragment extends Fragment {
     }
 
     /**
+     * Initialize the list to be used in the adapter
+     */
+    public void initList(){
+        itemList = new ArrayList<>();
+    }
+
+    /**
      * @param newItem a new MecItem to add into the listview
      */
-    public void addElement(MecItem newItem){
-        listAdapter.add(newItem);
+    public void addElements(List<MecItem> newItem){
+        itemList = newItem;
     }
 
     /**
      * remove all rows in the list
      */
     public void clearRows(){
-        listAdapter.removeAll();
+        itemList.clear();
     }
 
     /**
@@ -60,5 +69,11 @@ public class MecListFragment extends Fragment {
      */
     public void setName(String name){
         this.name = name;
+    }
+
+    public void notifyDataSetChanged() {
+        if (listAdapter != null) {
+            listAdapter.notifyDataSetChanged();
+        }
     }
 }

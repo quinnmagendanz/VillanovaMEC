@@ -1,12 +1,87 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/novaGrey"
+    android:orientation="vertical"
     tools:context="com.magendanz.villanovamec.SettingsFragment">
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Settings Fragment" />
+        android:layout_height="wrap_content"
+        android:text="SETTINGS"
+        android:alpha=".8"
+        android:textColor="@color/novaWhite"
+        android:textSize="@dimen/small_text_size"
+        android:padding="@dimen/large_padding"/>
 
-</FrameLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/change_calendar_button"
+        android:text="@string/change_calendar_label"
+        android:textColor="@color/novaWhite"
+        android:textSize="@dimen/medium_text_size"
+        android:padding="@dimen/large_padding"
+        android:onClick="switchSettings"
+        android:background="@drawable/color_ripple"/>
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/divider_height"
+        android:layout_marginStart="@dimen/small_padding"
+        android:layout_marginEnd="@dimen/small_padding"
+        android:background="@color/novaWhite"
+        android:alpha=".8"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/change_notice_button"
+        android:text="@string/change_notice_label"
+        android:textColor="@color/novaWhite"
+        android:textSize="@dimen/medium_text_size"
+        android:padding="@dimen/large_padding"
+        android:onClick="switchSettings"
+        android:background="@drawable/color_ripple"/>
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/divider_height"
+        android:layout_marginStart="@dimen/small_padding"
+        android:layout_marginEnd="@dimen/small_padding"
+        android:background="@color/novaWhite"
+        android:alpha=".8"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/change_location_button"
+        android:text="@string/change_location_label"
+        android:textColor="@color/novaWhite"
+        android:textSize="@dimen/medium_text_size"
+        android:padding="@dimen/large_padding"
+        android:onClick="switchSettings"
+        android:background="@drawable/color_ripple"/>
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/divider_height"
+        android:layout_marginStart="@dimen/small_padding"
+        android:layout_marginEnd="@dimen/small_padding"
+        android:background="@color/novaWhite"
+        android:alpha=".8"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/change_poc_button"
+        android:text="@string/change_contact_label"
+        android:textColor="@color/novaWhite"
+        android:textSize="@dimen/medium_text_size"
+        android:padding="@dimen/large_padding"
+        android:onClick="switchSettings"
+        android:background="@drawable/color_ripple"/>
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/divider_height"
+        android:layout_marginStart="@dimen/small_padding"
+        android:layout_marginEnd="@dimen/small_padding"
+        android:background="@color/novaWhite"
+        android:alpha=".8"/>
+
+</LinearLayout>

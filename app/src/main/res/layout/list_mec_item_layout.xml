@@ -9,30 +9,56 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/tag_text_box"
+        android:padding="@dimen/extra_small_padding"
+        android:id="@+id/time_text_box"
+        android:text="START TIME"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:textSize="@dimen/medium_text_size"
-        android:textColor="@color/novaSubDark"
-        android:padding="@dimen/extra_small_padding"/>
+        android:textColor="@color/novaSubDark" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/title_text_box"
-        android:layout_alignParentTop="true"
-        android:layout_toStartOf="@id/tag_text_box"
         android:padding="@dimen/extra_small_padding"
+        android:id="@+id/title_text_box"
+        android:text="NAME OF EVENT"
+        android:layout_alignParentTop="true"
+        android:layout_toStartOf="@id/time_text_box"
         android:textSize="@dimen/medium_text_size"
         android:textColor="@color/novaDark"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/extra_small_padding"
+        android:layout_below="@id/title_text_box"
+        android:id="@+id/location_text_box"
+        android:text="Main Field"
+        android:textSize="@dimen/small_text_size"
+        android:textColor="@color/novaSubDark"
+        android:gravity="center_vertical"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/day_box"
+        android:background="#FFc8d4df"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:text="14 APR"
+        android:textColor="@color/novaDark"
+        android:textSize="@dimen/small_text_size"
+        android:padding="@dimen/extra_small_padding"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/title_text_box"
-        android:id="@+id/details_text_box"
-        android:layout_alignParentBottom="true"
         android:padding="@dimen/extra_small_padding"
+        android:layout_below="@id/location_text_box"
+        android:layout_toStartOf="@id/day_box"
+        android:id="@+id/description_text_box"
+        android:text="This is a long description for the item in question"
+        android:layout_alignParentBottom="true"
         android:textSize="@dimen/small_text_size"
         android:textColor="@color/novaSubDark"
         android:gravity="center_vertical"/>

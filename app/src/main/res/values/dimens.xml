@@ -1,17 +1,28 @@
 <resources>
 
+    <dimen name="extra_large_item_size">100dp</dimen>
     <dimen name="large_item_size">60dp</dimen>
     <dimen name="medium_item_size">56dp</dimen>
+    <dimen name="small_item_size">42dp</dimen>
     <dimen name="extra_small_padding">4dp</dimen>
     <dimen name="small_padding">8dp</dimen>
     <dimen name="medium_padding">12dp</dimen>
     <dimen name="large_padding">18dp</dimen>
+    <dimen name="extra_large_padding">28dp</dimen>
 
+    <dimen name="extra_large_text_size">45sp</dimen>
     <dimen name="large_text_size">25sp</dimen>
     <dimen name="medium_text_size">18sp</dimen>
     <dimen name="small_text_size">14sp</dimen>
+    <dimen name="extra_small_text_size">12sp</dimen>
 
-    <dimen name="list_item_height">100dp</dimen>
+    <dimen name="list_item_height">95dp</dimen>
+
+    <dimen name="divider_height">1dp</dimen>
+
+    <dimen name="top_gradient_height">10dp</dimen>
+
+    <dimen name="welcome_width">130dp</dimen>
 
     <item name="villanova_lat" type="raw" format="float">40.036470</item>
     <item name="villanova_lng" type="raw" format="float">-75.340514</item>

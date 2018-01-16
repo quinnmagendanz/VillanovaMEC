@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="novaBlue">#FF01B6E6</color>
+    <color name="novaGrey">#FF505050</color>
+    <color name="novaLightGrey">#FFe0e0e0</color>
     <color name="novaSubBlue">#CC01B6E6</color>
     <color name="novaDark">#FF001F5B</color>
     <color name="novaSubDark">#CC001F5B</color>
     <color name="novaBlack">#FF000000</color>
     <color name="novaWhite">#FFFFFFFF</color>
-    <color name="novaOffWhite">#FFdedcdb</color>
+    <color name="novaOffWhite">#FFe8f4ff</color>
     <color name="selected_tab_fade">#20000090</color>
     <color name="transparent">#00000000</color>
+    <color name="text_box">#22666666</color>
+    <color name="text_stroke">#22999999</color>
 </resources>

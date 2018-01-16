@@ -1,12 +1,150 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.magendanz.villanovamec.EditEntryFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.magendanz.villanovamec.RideFragment">
-
-    <TextView
+    android:background="@color/novaGrey"
+    android:orientation="vertical">
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Ride Fragment" />
+        android:padding="@dimen/small_padding"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Submit Message to MEC Team"
+            android:textColor="@color/novaOffWhite"
+            android:textSize="@dimen/medium_text_size"
+            android:paddingBottom="@dimen/medium_padding"
+            android:id="@+id/settings_title_field"/>
 
-</FrameLayout>
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/divider_height"
+            android:background="@color/novaWhite"
+            android:layout_marginBottom="@dimen/small_padding"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/small_padding"
+            android:text="@string/message_preface"
+            android:textColor="@color/novaOffWhite"
+            android:alpha=".7"
+            android:textSize="@dimen/extra_small_text_size"/>
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/divider_height"
+            android:background="@color/novaWhite"
+            android:alpha=".5"
+            android:layout_margin="@dimen/small_padding"/>
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Request Ride"
+            android:id="@+id/ride_toggle"
+            android:saveEnabled="false"/>
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/divider_height"
+            android:background="@color/novaWhite"
+            android:alpha=".5"
+            android:layout_margin="@dimen/small_padding"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/ride_field_section"
+            android:visibility="gone">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/extra_small_padding"
+                android:text="Pickup Location"
+                android:textColor="@color/novaOffWhite"
+                android:textSize="@dimen/small_text_size"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/text_field">
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawSelectorOnTop="true"
+                    android:id="@+id/pickup_field"/>
+            </RelativeLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/extra_small_padding"
+                android:text="Dropoff Location"
+                android:textColor="@color/novaOffWhite"
+                android:textSize="@dimen/small_text_size"
+                android:layout_marginTop="@dimen/small_padding"/>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/text_field">
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawSelectorOnTop="true"
+                    android:id="@+id/dropoff_field"/>
+            </RelativeLayout>
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/divider_height"
+                android:background="@color/novaWhite"
+                android:alpha=".5"
+                android:layout_margin="@dimen/small_padding"/>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/extra_small_padding"
+            android:text="Name"
+            android:textColor="@color/novaOffWhite"
+            android:textSize="@dimen/small_text_size"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text|textCapWords"
+            android:background="@drawable/text_field"
+            android:hint="Enter Name"
+            android:id="@+id/question_name_field"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/extra_small_padding"
+            android:layout_marginTop="@dimen/small_padding"
+            android:text="Message"
+            android:textColor="@color/novaOffWhite"
+            android:textSize="@dimen/small_text_size"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/extra_large_item_size"
+            android:gravity="top"
+            android:inputType="text|textMultiLine|textCapSentences"
+            android:background="@drawable/text_field"
+            android:hint="Enter Message"
+            android:id="@+id/message_field" />
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/divider_height"
+            android:background="@color/novaWhite"
+            android:alpha=".5"
+            android:layout_margin="@dimen/small_padding"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:text="Submit"
+            android:onClick="submitMessage"
+            android:id="@+id/submit_message_button"/>
+    </LinearLayout>
+</ScrollView>

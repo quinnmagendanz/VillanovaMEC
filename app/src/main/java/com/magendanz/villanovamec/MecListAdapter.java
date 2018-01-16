@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Data adapter for use in all lists of Mecitems
@@ -17,9 +17,9 @@ public class MecListAdapter extends BaseAdapter {
 
     private Context mContext;
     private LayoutInflater mInflater;
-    private ArrayList<MecItem> mDataSource;
+    private List<MecItem> mDataSource;
 
-    public MecListAdapter(Context context, ArrayList<MecItem> items) {
+    public MecListAdapter(Context context, List<MecItem> items) {
         mContext = context;
         mDataSource = items;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -45,23 +45,17 @@ public class MecListAdapter extends BaseAdapter {
         // Get view for row item
         View rowView = mInflater.inflate(R.layout.list_mec_item_layout, parent, false);
         MecItem item = (MecItem) getItem(position);
-        ((TextView) rowView.findViewById(R.id.title_text_box)).setText(item.getTitle());
-        ((TextView) rowView.findViewById(R.id.tag_text_box)).setText(item.getLocation());
-        ((TextView) rowView.findViewById(R.id.details_text_box)).setText(item.getDetails());
+        int day = Integer.parseInt(item.getStartDay());
+        int backColor = day%2 == 0
+                ? mContext.getResources().getColor(R.color.novaLightGrey)
+                : mContext.getResources().getColor(R.color.novaOffWhite);
+        rowView.setBackgroundColor(backColor);
+        rowView.findViewById(R.id.day_box).setBackgroundColor(backColor - 0x101010);
+        ((TextView) rowView.findViewById(R.id.title_text_box)).setText(item.getMainField());
+        ((TextView) rowView.findViewById(R.id.description_text_box)).setText(item.getSecondaryField());
+        ((TextView) rowView.findViewById(R.id.time_text_box)).setText(item.getStartTime() + " - " + item.getEndTime());
+        ((TextView) rowView.findViewById(R.id.day_box)).setText(item.getStartDay() + " " + item.getStartMonth());
+        ((TextView) rowView.findViewById(R.id.location_text_box)).setText(item.getLocation());
         return rowView;
-    }
-
-    /**
-     * @param newItem the new MecItem to add to the adapter data
-     */
-    public void add(MecItem newItem){
-        mDataSource.add(newItem);
-    }
-
-    /**
-     * remove all elements in the data adapter
-     */
-    public void removeAll(){
-        mDataSource = new ArrayList<>();
     }
 }

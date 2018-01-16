@@ -1,8 +1,21 @@
 <resources>
     <string name="app_name">Villanova M.E.C.</string>
+    <string name="app_name_date">2018 Villanova M.E.C.</string>
 
-    <string name="unit_name">NROTC Unit</string>
-    <string name="field_name">Main Field</string>
+    <string name="welcome_title">Welcome</string>
+    <string name="message_preface">
+        If you have any questions or messages for the Villanova MEC team, please submit
+        them here and we will get back to you as soon as possible.\n\n
+
+        If you would like to request a ride around the Villanova campus, please check the
+        "Request Ride" field and select your pickup and drop-off locations. If your locations
+        are not options, select "Other" and specify in the message body.
+    </string>
+
+    <string name="change_calendar_label">Add/Edit/Delete Calendar Event</string>
+    <string name="change_notice_label">Add/Edit/Delete Announcement</string>
+    <string name="change_location_label">Add/Edit/Delete Location Pin</string>
+    <string name="change_contact_label">Change Point of Contact</string>
 
     <string name="schedule_title">Schedule of Events</string>
     <string name="news_title">Announcements</string>
@@ -11,7 +24,13 @@
     <string name="permission_request_message">This app needs the Location permission,
         please accept to use location functionality</string>
     <string name="permission_request_button">OK</string>
+    <string name="permission_request_title_sms">Send SMS Permission Needed</string>
+    <string name="permission_request_message_sms">This app needs permission to send SMS,
+        please accept to use messaging and ride request functionality.</string>
+    <string name="permission_request_button_sms">OK</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_hint_field">Entry Title</string>
+    <string name="description_hint_field">Entry Description</string>
+    <string name="location_hint_field">Select Location</string>
+
 </resources>
