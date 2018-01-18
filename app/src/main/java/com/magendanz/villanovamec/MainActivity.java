@@ -62,11 +62,11 @@ public class MainActivity extends FragmentActivity
     private View mapButton;
     private View rideButton;
     private View settingsButton;
-    private SwipeRefreshLayout refreshView;
     private MecListFragment scheduleFragment;
     private MecListFragment newsFragment;
     private MapFragment mappingFragment;
     private RideFragment rideFragment;
+    private WelcomeFragment welcomeFragment;
     private SettingsFragment settingsFragment;
     private EditEntryFragment editEntryFragment;
     private POCFragment pocFragment;
@@ -74,7 +74,7 @@ public class MainActivity extends FragmentActivity
     private long settingsPresses = 0;
     private long settingsPressTime = 0;
     private int settingsSection;
-    private boolean loading = false;
+    public boolean loading = false;
 
     private MecItem pointOfContact;
     private List<MecItem> calendarItems;
@@ -98,15 +98,13 @@ public class MainActivity extends FragmentActivity
         settingsButton = findViewById(R.id.settings_button);
         res = getResources();
         scheduleFragment = new MecListFragment();
-        scheduleFragment.initList();
-        scheduleFragment.setName(res.getString(R.string.schedule_title));
         newsFragment = new MecListFragment();
-        newsFragment.initList();
-        newsFragment.setName(res.getString(R.string.news_title));
+        welcomeFragment = new WelcomeFragment();
         rideFragment = new RideFragment();
         settingsFragment = new SettingsFragment();
         pocFragment = new POCFragment();
 
+        // TODO(magendanz) move settings edit behavior into fragment
         editEntryFragment = new EditEntryFragment();
         AdapterView.OnItemSelectedListener listener = new AdapterView.OnItemSelectedListener() {
             @Override
@@ -127,30 +125,23 @@ public class MainActivity extends FragmentActivity
         rideFragment.setLocationsList(locationItems);
 
         // Setup refresh listener which triggers new data loading
-        refreshView = findViewById(R.id.refresh_container);
-        refreshView.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        SwipeRefreshLayout.OnRefreshListener refreshListener = new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh(){
                 loading = true;
                 loadContent();
             }
-        });
-        refreshView.setColorSchemeResources(R.color.novaBlue, R.color.novaGrey, R.color.novaDark, R.color.novaOffWhite);
+        };
+        scheduleFragment.setUp(res.getString(R.string.schedule_title), refreshListener);
+        newsFragment.setUp(res.getString(R.string.news_title), refreshListener);
+        welcomeFragment.setUp(refreshListener);
 
-        refreshView.post(new Runnable() {
-            @Override
-            public void run() {
-                loading = true;
-                refreshView.setRefreshing(true);
-            }
-        });
-        loadContent();
-
-        // create welcome page and set to active fragment
-        WelcomeFragment welcomeFragment = new WelcomeFragment();
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, welcomeFragment);
         transaction.commit();
+
+        loading = true;
+        loadContent();
 
         // initialize map frame
         TypedValue out = new TypedValue();
@@ -408,15 +399,11 @@ public class MainActivity extends FragmentActivity
                 PaginatedScanList<MecItem> result = mapper.scan(MecItem.class, scanExpression);
                 addResponses(result);
 
-                refreshView.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        refreshView.setRefreshing(false);
-                        newsFragment.notifyDataSetChanged();
-                        scheduleFragment.notifyDataSetChanged();
-                        loading = false;
-                    }
-                });
+                // notify fragment UIs that refresh is done and to reload
+                scheduleFragment.refreshDone();
+                newsFragment.refreshDone();
+                welcomeFragment.refreshDone();
+                loading = false;
             }
         };
         Thread mythread = new Thread(runnable);
@@ -478,7 +465,6 @@ public class MainActivity extends FragmentActivity
         rideButton.setBackgroundColor(res.getColor(R.color.transparent));
         settingsButton.setBackgroundColor(res.getColor(R.color.transparent));
         view.setBackgroundColor(res.getColor(R.color.selected_tab_fade));
-        refreshView.setEnabled(true);
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         switch(view.getId()){
             case R.id.schedule_button:
@@ -488,7 +474,6 @@ public class MainActivity extends FragmentActivity
                 transaction.replace(R.id.fragment_container, newsFragment);
                 break;
             case R.id.map_button:
-                refreshView.setEnabled(false);
                 if (mGoogleMap != null) {
                     mGoogleMap.clear();
                     addMarkers();
@@ -497,11 +482,9 @@ public class MainActivity extends FragmentActivity
                 mappingFragment.getMapAsync(this);
                 break;
             case R.id.ride_button:
-                refreshView.setEnabled(false);
                 transaction.replace(R.id.fragment_container, rideFragment);
                 break;
             case R.id.settings_button:
-                refreshView.setEnabled(false);
                 transaction.replace(R.id.fragment_container, settingsFragment);
                 break;
             default:
@@ -638,6 +621,11 @@ public class MainActivity extends FragmentActivity
         endSettingsChange();
     }
 
+    /**
+     * Update the point of contact and upload to DynamoDB table
+     *
+     * @param view
+     */
     public void updatePOC(View view) {
         String number = ((EditText)findViewById(R.id.poc_number_field)).getText().toString();
         try {

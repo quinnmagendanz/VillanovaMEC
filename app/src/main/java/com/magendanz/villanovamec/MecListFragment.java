@@ -3,6 +3,7 @@ package com.magendanz.villanovamec;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +16,8 @@ import java.util.List;
 public class MecListFragment extends Fragment {
 
     private List<MecItem> itemList;
-    private View rootView;
+    private SwipeRefreshLayout refreshView;
+    private SwipeRefreshLayout.OnRefreshListener refreshListener;
     private MecListAdapter listAdapter;
     private String name = "Mec List";
 
@@ -27,9 +29,12 @@ public class MecListFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_mec_list, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_mec_list, container, false);
         ((TextView) rootView.findViewById(R.id.list_title_box)).setText(name);
         ((ListView) rootView.findViewById(R.id.schedule_list)).setAdapter(listAdapter);
+        refreshView = rootView.findViewById(R.id.refresh_container);
+        refreshView.setOnRefreshListener(refreshListener);
+        refreshView.setColorSchemeResources(R.color.novaBlue, R.color.novaGrey, R.color.novaDark, R.color.novaOffWhite);
         return rootView;
     }
 
@@ -44,13 +49,6 @@ public class MecListFragment extends Fragment {
     }
 
     /**
-     * Initialize the list to be used in the adapter
-     */
-    public void initList(){
-        itemList = new ArrayList<>();
-    }
-
-    /**
      * @param newItem a new MecItem to add into the listview
      */
     public void addElements(List<MecItem> newItem){
@@ -58,22 +56,31 @@ public class MecListFragment extends Fragment {
     }
 
     /**
-     * remove all rows in the list
+     * initialize the data elements and UI of the fragment
+     *
+     * @param name the title to display at the top of the list
+     * @param refreshListener the listener used to define response to a refresh swipe
      */
-    public void clearRows(){
-        itemList.clear();
+    public void setUp(String name, SwipeRefreshLayout.OnRefreshListener refreshListener){
+        this.name = name;
+        itemList = new ArrayList<>();
+        this.refreshListener = refreshListener;
     }
 
     /**
-     * @param name the title to display at the top of the list
+     * notify UI elements when refresh has been completed
      */
-    public void setName(String name){
-        this.name = name;
-    }
-
-    public void notifyDataSetChanged() {
-        if (listAdapter != null) {
-            listAdapter.notifyDataSetChanged();
+    public void refreshDone() {
+        if (refreshView != null) {
+            refreshView.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (listAdapter != null) {
+                        listAdapter.notifyDataSetChanged();
+                    }
+                    refreshView.setRefreshing(false);
+                }
+            });
         }
     }
 }
